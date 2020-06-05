@@ -1,0 +1,93 @@
+$essential-color: #f15c21; // 主色
+$auxiliary-color: #ffbe2f; // 辅助色
+$warning-color: #ff5555; // 点缀色  warning
+$icon-color: #0074ff; // 点缀色2  icon
+$text-black:#222222;
+$text-black-gary:#666666;
+$text-gary:#b3c0d1;
+$border-list-color:#ebf0f5;
+$border-color:#dbdbdb;
+$bg-color:#f6f6f6;
+$bg-white:#FFFFFF;
+
+$text-xs:20upx;
+$text-sm:24upx;
+$text-df:28upx;
+$text-lg:30upx;
+$text-xl:36upx;
+
+.back-white {
+	background-color: #FFFFFF;
+}
+
+.meta-button-default {
+	width: 690upx !important;
+	height: 90upx !important;
+	line-height: 100% !important;
+	background-color: $essential-color !important;
+	font-size: $text-lg !important;
+}
+
+.meta-button {
+	width: 400upx !important;
+	height: 90upx !important;
+	line-height: 100% !important;
+	background-color: $essential-color !important;
+	font-size: $text-lg !important;
+}
+
+.meta-button-round {
+	width: 400upx !important;
+	height: 90upx !important;
+	line-height: 100% !important;
+	background-color: #FFFFFF !important;
+	font-size: $text-lg !important;
+	border: 2upx solid $essential-color !important;
+	color: $essential-color !important;
+}
+
+.meta-button-sm {
+	width: 336upx !important;
+	height: 90upx !important;
+	line-height: 100% !important;
+	background-color: $essential-color !important;
+	font-size: $text-lg !important;
+}
+
+.meta-button-sm-round {
+	width: 336upx !important;
+	height: 90upx !important;
+	line-height: 100% !important;
+	background-color: #ffffff !important;
+	font-size: 30upx !important;
+	border: 2upx solid $essential-color !important;
+	color: $essential-color !important;
+}
+
+.meta-button-sm-round-gary {
+	width: 336upx !important;
+	height: 90upx !important;
+	line-height: 100% !important;
+	background-color: #ffffff !important;
+	font-size: 30upx !important;
+	border: 2upx solid $text-gary !important;
+	color: $text-black-gary !important;
+}
+
+.meta-button-xs {
+	width: 128upx !important;
+	height: 48upx !important;
+	line-height: 100% !important;
+	background-color: $essential-color !important;
+	font-size: $text-sm !important;
+}
+
+.meta-button-xs-round {
+	width: 128upx !important;
+	height: 48upx !important;
+	line-height: 100% !important;
+	background-color: #ffffff !important;
+	font-size: $text-sm !important;
+	border: 2upx solid $essential-color !important;
+	color: $essential-color !important;
+}
