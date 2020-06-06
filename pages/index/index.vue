@@ -1,21 +1,51 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
+		1111
+		<view>
+			<view class="page-body">222
+				<view class="page-section page-section-gap">
+					<map style="width: 100%; height: 300px;" :latitude="latitude" :longitude="longitude" :markers="covers">
+					</map>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {customer} from '../../api/index.js'
 	export default {
 		data() {
 			return {
-				title: 'Hello'
+				id: 0, // 使用 marker点击事件 需要填写id
+				title: 'map',
+				latitude: 39.909,
+				longitude: 116.39742,
+				covers: [{
+					latitude: 39.909,
+					longitude: 116.39742,
+				}, {
+					latitude: 39.90,
+					longitude: 116.39,
+				}],
+				code:""
 			}
 		},
-		onLoad() {
-
+		created() {
+			uni.login({
+			  provider: 'weixin',
+			  success: function (loginRes) {
+				if(loginRes.errMsg == "login:ok"){
+					const code = loginRes.code 
+					const data = {
+						code:code
+					}
+					customer(data).then(ele=>{
+						
+					})
+				}
+			  }
+			})
 		},
 		methods: {
 
