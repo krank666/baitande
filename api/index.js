@@ -9,3 +9,22 @@ export const customer = (data)=>{
 		method:'POST'
 	})
 }
+
+export const customerPUT = (data)=>{
+	return myRequest({
+		url:'/customer/customer',
+		data,
+		method:'PUT'
+	})
+}
+
+/**
+ * 摆摊儿接口
+ */
+export const createStill = (data)=>{
+	return myRequest({
+		url:'/still/createStill',
+		data,
+		method:'POST'
+	})
+}

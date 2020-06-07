@@ -1,20 +1,27 @@
 
-.content {
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-box-orient: vertical;
-	-webkit-box-direction: normal;
-	-webkit-flex-direction: column;
-	        flex-direction: column;
-	-webkit-box-align: center;
-	-webkit-align-items: center;
-	        align-items: center;
-	-webkit-box-pack: center;
-	-webkit-justify-content: center;
-	        justify-content: center;
+.content.data-v-1751762b {
+	width: 100%;
+	height: 100vh;
+	position: relative;
 }
-.logo {
+.buttons.data-v-1751762b {
+	position: fixed;
+	width: 100%;
+	height: auto;
+	bottom: 0;
+	border-top: 1rpx solid lightgrey;
+}
+.box.data-v-1751762b {
+	width: 100%;
+}
+.btns.data-v-1751762b {
+	width: 80%;
+	height: 70rpx;
+	margin: 20rpx 10%;
+	color: #fff;
+	background-color: orange;
+}
+.logo.data-v-1751762b {
 	height: 200rpx;
 	width: 200rpx;
 	margin-top: 200rpx;
@@ -22,7 +29,7 @@
 	margin-right: auto;
 	margin-bottom: 50rpx;
 }
-.text-area {
+.text-area.data-v-1751762b {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;
@@ -30,7 +37,7 @@
 	-webkit-justify-content: center;
 	        justify-content: center;
 }
-.title {
+.title.data-v-1751762b {
 	font-size: 36rpx;
 	color: #8f8f94;
 }
