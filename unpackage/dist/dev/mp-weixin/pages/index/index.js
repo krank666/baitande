@@ -135,7 +135,40 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 17));
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 29));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -157,6 +190,7 @@ var _index = __webpack_require__(/*! ../../api/index.js */ 20);function _interop
 
 
 
+
 {
   data: function data() {
     return {
@@ -168,7 +202,10 @@ var _index = __webpack_require__(/*! ../../api/index.js */ 20);function _interop
         latitude: 0,
         longitude: 0 }],
 
-      code: "" };
+      code: "",
+      modalName: null,
+      name: '',
+      description: '' };
 
   },
   created: function created() {
@@ -201,7 +238,7 @@ var _index = __webpack_require__(/*! ../../api/index.js */ 20);function _interop
   },
   methods: {
     test: function test(e) {return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var data, ele;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (!(
-                e.detail.errMsg = "getUserInfo:ok")) {_context.next = 6;break;}
+                e.detail.errMsg = "getUserInfo:ok")) {_context.next = 7;break;}
                 data = {
                   openid: uni.getStorageSync('customer').openid,
                   rawData: e.detail.rawData,
@@ -210,15 +247,23 @@ var _index = __webpack_require__(/*! ../../api/index.js */ 20);function _interop
                   signature: e.detail.signature };_context.next = 4;return (
 
                   (0, _index.customerPUT)(data));case 4:ele = _context.sent;
-                uni.removeStorage({
-                  key: 'customer',
-                  success: function success(res) {
-                    console.log('success');
-                    uni.setStorageSync('customer', res.data);
-                  } });case 6:case "end":return _context.stop();}}}, _callee);}))();
+                uni.removeStorage({ key: 'customer' });
+                uni.setStorageSync('customer', ele.data);case 7:case "end":return _context.stop();}}}, _callee);}))();
 
-
-
+    },
+    showModal: function showModal(e) {
+      this.modalName = e.currentTarget.dataset.target;
+    },
+    hideModal: function hideModal(e) {
+      this.modalName = null;
+    },
+    submit: function submit() {
+      var data = {
+        exaCustomerId: "",
+        name: this.name,
+        description: this.description,
+        lng: this.longitude,
+        lat: this.latitude };
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

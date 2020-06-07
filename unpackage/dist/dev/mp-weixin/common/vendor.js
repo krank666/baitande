@@ -7771,16 +7771,7 @@ function normalizeComponent (
 /* 14 */,
 /* 15 */,
 /* 16 */,
-/* 17 */
-/*!*********************************************************************************************!*\
-  !*** ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator/index.js ***!
-  \*********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! regenerator-runtime */ 18);
-
-/***/ }),
+/* 17 */,
 /* 18 */
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
@@ -8631,7 +8622,7 @@ var myRequest = function myRequest(_ref)
     switch (proxy) {
       case 'api':
         // BASEURL = 'https://www.staroftomorrow.cn/api/gw-lcb'
-        BASEURL = 'http://mchmnk.natappfree.cc';
+        BASEURL = 'http://dczadz.natappfree.cc';
         break;
       case 'admin':
         // BASEURL = 'https://www.staroftomorrow.cn/api'
@@ -8680,6 +8671,23 @@ var myRequest = function myRequest(_ref)
 
 myRequest;exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */
+/*!*********************************************************************************************!*\
+  !*** ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator/index.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ 18);
 
 /***/ })
 ]]);

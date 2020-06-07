@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="box">
-			<view class="page-body box">222
+			<view class="page-body box">
 				<view class="page-section page-section-gap">
 					<map style="width: 100%; height:400px" :latitude="latitude" :longitude="longitude" :markers="covers">
 					</map>
@@ -9,8 +9,41 @@
 			</view>
 		</view>
 		<view class="buttons">
-			<button class="cu-btn btns" open-type="getUserInfo" @getuserinfo="test">我要摆摊儿</button>
+			<button class="cu-btn btns" open-type="getUserInfo" @getuserinfo="test" @tap="showModal" data-target="DialogModal1">我要摆摊儿</button>
 			<!-- <button class="cu-btn block line-blue margin-tb-sm lg" disabled>无效状态</button> -->
+		</view>
+		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
+			<view class="cu-dialog dialog">
+				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
+					<view class="content">摊位信息</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl">
+					<form action="">
+						<view class="cu-form-group">
+							<view class="title">摊位名称</view>
+							<input placeholder="摊位叫什么" name="input" v-model="name"></input>
+						</view>
+						<view class="cu-form-group">
+							<view class="title">摊位描述</view>
+							<input placeholder="卖什么的" name="input" v-model="description"></input>
+						</view>
+						<!-- <view class="cu-form-group">
+							<view class="title">摊位地址</view>
+							<input placeholder="请输入您的摊位地址" name="input" v-model=""></input>
+						</view> -->
+					</form>
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
+						<button class="cu-btn bg-green margin-left" @tap="submit">确定</button>
+
+					</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -18,7 +51,8 @@
 <script>
 	import {
 		customer,
-		customerPUT
+		customerPUT,
+		createStill
 	} from '../../api/index.js'
 	export default {
 		data() {
@@ -31,7 +65,10 @@
 					latitude: 0,
 					longitude: 0,
 				}],
-				code: ""
+				code: "",
+				modalName: null,
+				name: '',
+				description: ''
 			}
 		},
 		created() {
@@ -51,15 +88,15 @@
 				}
 			})
 			uni.getLocation({
-			    type: 'wgs84',
-			    success: function (res) {
-			        console.log('当前位置的经度：' + res.longitude);
-			        console.log('当前位置的纬度：' + res.latitude);
+				type: 'wgs84',
+				success: function(res) {
+					console.log('当前位置的经度：' + res.longitude);
+					console.log('当前位置的纬度：' + res.latitude);
 					this_.longitude = res.longitude
 					this_.latitude = res.latitude
 					this_.covers[0].latitude = res.latitude
 					this_.covers[0].longitude = res.longitude
-			    }
+				}
 			});
 		},
 		methods: {
@@ -73,16 +110,24 @@
 						signature: e.detail.signature
 					}
 					const ele = await customerPUT(data)
-					uni.removeStorage({
-					    key: 'customer',
-					    success: function (res) {
-					        console.log('success');
-							uni.setStorageSync('customer', res.data)
-					    }
-					});
+					uni.removeStorage({key: 'customer'});
+					uni.setStorageSync('customer', ele.data)
 				}
-
-				
+			},
+			showModal(e) {
+				this.modalName = e.currentTarget.dataset.target
+			},
+			hideModal(e) {
+				this.modalName = null
+			},
+			submit() {
+				const data = {
+					exaCustomerId: "",
+					name: this.name,
+					description: this.description,
+					lng: this.longitude,
+					lat: this.latitude
+				}
 			}
 		}
 	}
@@ -101,6 +146,10 @@
 		height: auto;
 		bottom: 0;
 		border-top: 1rpx solid lightgrey;
+	}
+
+	.dialog {
+		height: auto;
 	}
 
 	.box {

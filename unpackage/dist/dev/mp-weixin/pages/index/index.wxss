@@ -11,6 +11,9 @@
 	bottom: 0;
 	border-top: 1rpx solid lightgrey;
 }
+.dialog.data-v-1751762b {
+	height: auto;
+}
 .box.data-v-1751762b {
 	width: 100%;
 }
