@@ -22,7 +22,7 @@ const myRequest = ({
         switch (proxy) {
             case 'api':
                 // BASEURL = 'https://www.staroftomorrow.cn/api/gw-lcb'
-                BASEURL = 'http://10.188.68.88:8881'
+                BASEURL = 'http://i5p8yg.natappfree.cc/'
                 break;
             case 'admin':
                 // BASEURL = 'https://www.staroftomorrow.cn/api'

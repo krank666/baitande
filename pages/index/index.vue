@@ -9,7 +9,8 @@
 			</view>
 		</view>
 		<view class="buttons">
-			<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test" @tap="showModal" data-target="DialogModal1">摆摊</button>
+			<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test"
+			 @tap="showModal" data-target="DialogModal1">摆摊</button>
 			<!-- <button class="cu-btn block line-blue margin-tb-sm lg" disabled>无效状态</button> -->
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
@@ -63,103 +64,149 @@
 				latitude: 0,
 				longitude: 0,
 				covers: [{
-					latitude: 0,
-					longitude: 0,
-				}],
-				code: "",
-				modalName: null,
-				name: '',
-				description: ''
-			}
-		},
-		created() {
-			const this_ = this
-			uni.login({
-				provider: 'weixin',
-				success: function(loginRes) {
-					if (loginRes.errMsg == "login:ok") {
-						const code = loginRes.code
-						const data = {
-							code: code
+						latitude: 0,
+						longitude: 0,
+						callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
+						 width: 35,   
+						  height: 30,   
+						 color: "#ff0000",  
+						 fontSize: "16",   
+						  borderRadius: "10",  
+						 bgColor: "#ffffff",  
+						 padding: "10",  
+						 display:"ALWAYS" 
 						}
-						customer(data).then(ele => {
+						},
+						
+						],
+					code: "",
+					modalName: null,
+					name: '',
+					description: ''
+				}
+			},
+			created() {
+					const this_ = this
+					uni.login({
+						provider: 'weixin',
+						success: function(loginRes) {
+							if (loginRes.errMsg == "login:ok") {
+								const code = loginRes.code
+								const data = {
+									code: code
+								}
+								customer(data).then(ele => {
+									if (ele.code != 7) {
+										uni.setStorageSync('customer', ele.data)
+									} else {
+										uni.showToast({
+											title: ele.msg,
+											duration: 3000,
+											icon: "none",
+										})
+									}
+								})
+							}
+						}
+					})
+					//获取用户位置
+					uni.getLocation({
+						type: 'wgs84',
+						success: function(res) {
+							console.log('当前位置的经度：' + res.longitude);
+							console.log('当前位置的纬度：' + res.latitude);
+							this_.longitude = res.longitude
+							this_.latitude = res.latitude
+							this_.covers[0].latitude = res.latitude
+							this_.covers[0].longitude = res.longitude
+							const data = {
+								lng: res.longitude,
+								lat: res.latitude
+							}
+							findStillByLatAndLng(data).then(res => {
+								const Arr = res.data
+								Arr && Arr.map(item => {
+									const obj = {}
+									obj.latitude = item.lat
+									obj.longitude = item.lng
+									this_.covers.push(obj)
+								})
+							})
+							console.log(this_.covers)
+						}
+					});
+
+				},
+				methods: {
+					async test(e) {
+						if (e.detail.errMsg = "getUserInfo:ok") {
+							const data = {
+								openid: uni.getStorageSync('customer').openid,
+								rawData: e.detail.rawData,
+								encryptedData: e.detail.encryptedData,
+								iv: e.detail.iv,
+								signature: e.detail.signature
+							}
+							const ele = await customerPUT(data)
+							uni.removeStorage({
+								key: 'customer'
+							});
 							uni.setStorageSync('customer', ele.data)
-						})
-					}
-				}
-			})
-			//获取用户位置
-			uni.getLocation({
-				type: 'wgs84',
-				success: function(res) {
-					console.log('当前位置的经度：' + res.longitude);
-					console.log('当前位置的纬度：' + res.latitude);
-					this_.longitude = res.longitude
-					this_.latitude = res.latitude
-					this_.covers[0].latitude = res.latitude
-					this_.covers[0].longitude = res.longitude
-					const data = {
-						lng:res.longitude,
-						lat:res.latitude
-					}
-					findStillByLatAndLng(data).then(res=>{
-						const Arr = res.data
-						Arr&&Arr.map(item=>{
-							const obj = {}
-							obj.latitude = item.lat
-							obj.longitude = item.lng
-							this_.covers.push(obj)
-						})
-					})
-					console.log(this_.covers)
-				}
-			});
-			
-		},
-		methods: {
-			async test(e) {
-				if (e.detail.errMsg = "getUserInfo:ok") {
-					const data = {
-						openid: uni.getStorageSync('customer').openid,
-						rawData: e.detail.rawData,
-						encryptedData: e.detail.encryptedData,
-						iv: e.detail.iv,
-						signature: e.detail.signature
-					}
-					const ele = await customerPUT(data)
-					uni.removeStorage({key: 'customer'});
-					uni.setStorageSync('customer', ele.data)
-				}
-			},
-			showModal(e) {
-				this.modalName = e.currentTarget.dataset.target
-			},
-			hideModal(e) {
-				this.modalName = null
-			},
-			async submit() {
-				const data = {
-					exaCustomerId: uni.getStorageSync('customer').ID,
-					name: this.name,
-					description: this.description,
-					lng: this.longitude,
-					lat: this.latitude
-				}
-				const ele = await createStill(data)
-				if(ele.code == 0){
-					this.hideModal()
-					uni.showToast({
-					    title: '出摊成功！',
-					    duration: 2000,
-						icon:"none",
-						success:{
-							
 						}
-					})
+					},
+					showModal(e) {
+						this.modalName = e.currentTarget.dataset.target
+					},
+					hideModal(e) {
+						this.modalName = null
+					},
+					async submit() {
+						const data = {
+							exaCustomerId: uni.getStorageSync('customer').ID,
+							name: this.name,
+							description: this.description,
+							lng: this.longitude,
+							lat: this.latitude,
+							open: true
+						}
+						const ele = await createStill(data)
+
+						if (ele.code == 0) {
+							this.hideModal()
+							this.covers = []
+							console.log(this.covers)
+							const that = this
+							uni.showToast({
+								title: '出摊成功！',
+								duration: 2000,
+								icon: "none",
+								success() {
+									const datas = {
+										lng: that.longitude,
+										lat: that.latitude,
+									}
+									findStillByLatAndLng(datas).then(res => {
+										const Arr = res.data
+										Arr && Arr.map(item => {
+											const obj = {}
+											obj.latitude = item.lat
+											obj.longitude = item.lng
+											that.covers.push(obj)
+										})
+									})
+								}
+							})
+							console.log(this.covers)
+						} else {
+							uni.showToast({
+								title: ele.msg,
+								duration: 3000,
+								icon: "none",
+							})
+						}
+					}
 				}
-			}
 		}
-	}
 </script>
 
 <style scoped>
@@ -177,12 +224,12 @@
 		border-top: 1rpx solid lightgrey;
 	} */
 	.buttons {
-	    position: fixed;
-	    width: 100%;
-	    height: auto;
-	    bottom: 0;
-	    text-align: center;
-	  }
+		position: fixed;
+		width: 100%;
+		height: auto;
+		bottom: 0;
+		text-align: center;
+	}
 
 	.dialog {
 		height: auto;
@@ -200,18 +247,19 @@
 		background-color: orange;
 	} */
 	.btns {
-	    width: 150upx; 
-	    height: 150rpx;
-	    padding: 10upx;
-	    color: #fff;
-	    border-radius: 50%;
-	    margin-bottom: 40upx;
-	    background-color: #007fff;
-	     box-shadow:4px 4px 4px 0 rgba(61, 122, 255, .6) ;
-	  }
-	  .activeBg{
-	    background-color: #39b54a;
-	  }
+		width: 150upx;
+		height: 150rpx;
+		padding: 10upx;
+		color: #fff;
+		border-radius: 50%;
+		margin-bottom: 40upx;
+		background-color: #007fff;
+		box-shadow: 4px 4px 4px 0 rgba(61, 122, 255, .6);
+	}
+
+	.activeBg {
+		background-color: #39b54a;
+	}
 
 	.logo {
 		height: 200rpx;

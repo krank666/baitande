@@ -4,7 +4,7 @@ import myRequest from '../utils/request.js'
 */
 export const customer = (data)=>{
 	return myRequest({
-		url:'/customer/customer',
+		url:'customer/customer',
 		data,
 		method:'POST'
 	})
@@ -12,7 +12,7 @@ export const customer = (data)=>{
 
 export const customerPUT = (data)=>{
 	return myRequest({
-		url:'/customer/customer',
+		url:'customer/customer',
 		data,
 		method:'PUT'
 	})
@@ -23,7 +23,7 @@ export const customerPUT = (data)=>{
  */
 export const createStill = (data)=>{
 	return myRequest({
-		url:'/still/createStill',
+		url:'still/createStill',
 		data,
 		method:'POST'
 	})
@@ -34,7 +34,7 @@ export const createStill = (data)=>{
  */
 export const findStillByLatAndLng = (data)=>{
 	return myRequest({
-		url:'/still/findStillByLatAndLng',
+		url:'still/findStillByLatAndLng',
 		data,
 		method:'POST'
 	})
