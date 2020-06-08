@@ -3,13 +3,13 @@
 		<view class="box">
 			<view class="page-body box">
 				<view class="page-section page-section-gap">
-					<map style="width: 100%; height:400px" :latitude="latitude" :longitude="longitude" :markers="covers">
+					<map style="width: 100%; height:100vh;" :latitude="latitude" :longitude="longitude" :markers="covers">
 					</map>
 				</view>
 			</view>
 		</view>
 		<view class="buttons">
-			<button class="cu-btn btns" open-type="getUserInfo" @getuserinfo="test" @tap="showModal" data-target="DialogModal1">我要摆摊儿</button>
+			<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test" @tap="showModal" data-target="DialogModal1">摆摊</button>
 			<!-- <button class="cu-btn block line-blue margin-tb-sm lg" disabled>无效状态</button> -->
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
@@ -52,7 +52,8 @@
 	import {
 		customer,
 		customerPUT,
-		createStill
+		createStill,
+		findStillByLatAndLng
 	} from '../../api/index.js'
 	export default {
 		data() {
@@ -87,6 +88,7 @@
 					}
 				}
 			})
+			//获取用户位置
 			uni.getLocation({
 				type: 'wgs84',
 				success: function(res) {
@@ -96,8 +98,23 @@
 					this_.latitude = res.latitude
 					this_.covers[0].latitude = res.latitude
 					this_.covers[0].longitude = res.longitude
+					const data = {
+						lng:res.longitude,
+						lat:res.latitude
+					}
+					findStillByLatAndLng(data).then(res=>{
+						const Arr = res.data
+						Arr&&Arr.map(item=>{
+							const obj = {}
+							obj.latitude = item.lat
+							obj.longitude = item.lng
+							this_.covers.push(obj)
+						})
+					})
+					console.log(this_.covers)
 				}
 			});
+			
 		},
 		methods: {
 			async test(e) {
@@ -120,13 +137,25 @@
 			hideModal(e) {
 				this.modalName = null
 			},
-			submit() {
+			async submit() {
 				const data = {
-					exaCustomerId: "",
+					exaCustomerId: uni.getStorageSync('customer').ID,
 					name: this.name,
 					description: this.description,
 					lng: this.longitude,
 					lat: this.latitude
+				}
+				const ele = await createStill(data)
+				if(ele.code == 0){
+					this.hideModal()
+					uni.showToast({
+					    title: '出摊成功！',
+					    duration: 2000,
+						icon:"none",
+						success:{
+							
+						}
+					})
 				}
 			}
 		}
@@ -140,13 +169,20 @@
 		position: relative;
 	}
 
-	.buttons {
+	/* .buttons {
 		position: fixed;
 		width: 100%;
 		height: auto;
 		bottom: 0;
 		border-top: 1rpx solid lightgrey;
-	}
+	} */
+	.buttons {
+	    position: fixed;
+	    width: 100%;
+	    height: auto;
+	    bottom: 0;
+	    text-align: center;
+	  }
 
 	.dialog {
 		height: auto;
@@ -156,13 +192,26 @@
 		width: 100%;
 	}
 
-	.btns {
+	/* .btns {
 		width: 80%;
 		height: 70rpx;
 		margin: 20rpx 10%;
 		color: #fff;
 		background-color: orange;
-	}
+	} */
+	.btns {
+	    width: 150upx; 
+	    height: 150rpx;
+	    padding: 10upx;
+	    color: #fff;
+	    border-radius: 50%;
+	    margin-bottom: 40upx;
+	    background-color: #007fff;
+	     box-shadow:4px 4px 4px 0 rgba(61, 122, 255, .6) ;
+	  }
+	  .activeBg{
+	    background-color: #39b54a;
+	  }
 
 	.logo {
 		height: 200rpx;

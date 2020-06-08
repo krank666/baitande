@@ -28,3 +28,14 @@ export const createStill = (data)=>{
 		method:'POST'
 	})
 }
+
+/**
+ * 调取周围摊位地址
+ */
+export const findStillByLatAndLng = (data)=>{
+	return myRequest({
+		url:'/still/findStillByLatAndLng',
+		data,
+		method:'POST'
+	})
+}
