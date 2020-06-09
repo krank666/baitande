@@ -74,7 +74,7 @@
 						  borderRadius: "10",  
 						 bgColor: "#ffffff",  
 						 padding: "10",  
-						 display:"ALWAYS" 
+						 display:"BYCLICK" 
 						}
 						},
 						
