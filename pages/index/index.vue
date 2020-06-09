@@ -8,7 +8,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="buttons">
+		<view class="buttons shadow shadow-lg">
 			<view class="flex justify-between padding-top-sm">
 				<view  class="flex solid-bottom padding-lr align-center user">
 					<view class=""><img src="../../static/logo.png"  class="Img" alt="" ></view>
@@ -18,15 +18,13 @@
 					<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test"
 					 @tap="showModal" data-target="DialogModal1"> <text class="lg cuIcon-shop"></text>摆摊</button>
 				</view>
-			
 			</view>
 			<view class="flex justify-between padding-bottom-sm">
 				<view  class="flex solid-bottom padding-lr align-center user">
 					<view class="Img"><text class="lg cuIcon-locationfill"></text></view>
-					<view class="padding-sm">当前所在朝阳区东大桥..摊位</view>
+					<view class="padding-sm">当前所在朝阳区东大桥...</view>
 				</view>
 			</view>
-			
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
@@ -233,6 +231,9 @@
 		background: #fff;
 		left: 1%;
 		margin-bottom: 10rpx;
+		/* box-shadow: 3px 3px 4px rgba(26, 26, 26, 0.4); */
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+		border-radius: 6rpx;
 	}
 
 	.dialog {
@@ -243,21 +244,18 @@
 		width: 100%;
 	}
 	.btns {
-		min-width: 120upx;
+		min-width: 120rpx;
 		height: 60rpx;
-		padding: 20upx;
+		padding: 20rpx;
 		color: #fff;
 		/* border-radius: 50%; */
-		/* margin-bottom: 40upx; */
-		margin-left: 30upx;
+		margin-left: 30rpx;
 		background-color: #007fff;
-		box-shadow: 4px 4px 4px 0 rgba(61, 122, 255, .6);
+		box-shadow: 3px 3px 2px 0 rgba(61, 122, 255, .4);
 	}
-
 	.activeBg {
 		background-color: #39b54a;
 	}
-
 	.logo {
 		height: 200rpx;
 		width: 200rpx;
@@ -266,7 +264,6 @@
 		margin-right: auto;
 		margin-bottom: 50rpx;
 	}
-
 	.text-area {
 		display: flex;
 		justify-content: center;
@@ -278,10 +275,6 @@
 	.content{
 		height: auto;
 	}
-	/* .justify-between {
-		padding: 23upx 0;
-	} */
-	
 	.border-bot{
 		border-bottom: 1px solid #e2e5ec;
 	}
@@ -298,7 +291,7 @@
 	.textarea{
 		text-align: left;
 		border: 1px solid #e2e5ec;
-		border-radius: 10upx; 
+		border-radius: 10rpx; 
 		width: 100%; 
 		padding: 20rpx;
 	}
@@ -306,8 +299,8 @@
 		width: 33%;
 	}
 	.Img{
-		width: 50upx;
-		height: 50upx;
+		width: 50rpx;
+		height: 50rpx;
 	}
 	.cuIcon-shop{
 		color: #fff!important;
