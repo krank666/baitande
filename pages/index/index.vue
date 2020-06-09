@@ -3,7 +3,7 @@
 		<view class="box">
 			<view class="page-body box">
 				<view class="page-section page-section-gap">
-					<map style="width: 100%; height:100vh;" :latitude="latitude" :longitude="longitude" :markers="covers">
+					<map style="width: 100%; height:100vh;" @callouttap="callouttap" :latitude="latitude" :longitude="longitude" :markers="covers">
 					</map>
 				</view>
 			</view>
@@ -19,10 +19,6 @@
 					 @getuserinfo="test" @tap="showModal" data-target="DialogModal1"> <text class="lg cuIcon-shop"></text>出摊</button>
 					 <button class="cu-btn btns" v-if="buttonFlag" @tap="cancel"> <text class="lg cuIcon-shop"></text>收摊</button>
 				</view>
-<<<<<<< HEAD
-=======
-
->>>>>>> 5a531b4c9f571d154df35efa9e8ee9ce4be0070b
 			</view>
 			<view class="flex justify-between padding-bottom-sm">
 				<view class="flex solid-bottom padding-lr align-center user">
@@ -30,10 +26,6 @@
 					<view class="padding-sm">当前所在朝阳区东大桥...</view>
 				</view>
 			</view>
-<<<<<<< HEAD
-=======
-
->>>>>>> 5a531b4c9f571d154df35efa9e8ee9ce4be0070b
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
@@ -260,13 +252,15 @@
 								}
 							})
 						}
+					},
+					callouttap(e){
+						console.log(e)
 					}
 				}
 		}
 </script>
 
 <style scoped>
-<<<<<<< HEAD
 	.content {
 		width: 100%;
 		height: 100vh;
@@ -360,59 +354,6 @@
 		font-size: 50rpx;
 		color: #007fff;
 	}
-=======
-.content {
-  width: 100%;
-  height: 100vh;
-  position: relative;
- }
- .buttons {
-  position: fixed;
-  width: 98%;
-  height: auto;
-  bottom: 0;
-  background: #fff;
-  left: 1%;
-  margin-bottom: 10rpx;
- }
-
- .dialog {
-  height: auto;
- }
-
- .box {
-  width: 100%;
- }
- .btns {
-  min-width: 120upx;
-  height: 60rpx;
-  padding: 20upx;
-  color: #fff;
-  /* border-radius: 50%; */
-  /* margin-bottom: 40upx; */
-  margin-left: 30upx;
-  background-color: #007fff;
-  box-shadow: 4px 4px 4px 0 rgba(61, 122, 255, .6);
- }
-
- .activeBg {
-  background-color: #39b54a;
- }
-
- .logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
- }
-
- .text-area {
-  display: flex;
-  justify-content: center;
- }
->>>>>>> 5a531b4c9f571d154df35efa9e8ee9ce4be0070b
 
  .title {
   font-size: 30rpx;

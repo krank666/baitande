@@ -21,7 +21,7 @@ const myRequest = ({
         let BASEURL
         switch (proxy) {
             case 'api':
-                BASEURL = 'http://10.188.68.88:8881/'
+                BASEURL = 'http://b87gsh.natappfree.cc/'
                 // BASEURL = 'https://tantu.henrongyi.top/v1/'
                 break;
             case 'admin':
