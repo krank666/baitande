@@ -9,6 +9,30 @@
 			</view>
 		</view>
 		<view class="buttons">
+			<!-- <view  class="flex solid-bottom padding align-center user">
+				<view class=""><img src="../../static/logo.png"  class="userImg" alt="" ></view>
+				<view class="padding-sm">用户名</view>
+			</view> -->
+			<!-- <view class="shop">
+				<text class="lg text-gray cuIcon-shop"></text>
+				<view>摆摊</view>
+			</view> -->
+			<view class="flex justify-between">
+				<view  class="flex solid-bottom padding-lr align-center user">
+					<view class=""><img src="../../static/logo.png"  class="userImg" alt="" ></view>
+					<view class="padding-sm">用户名</view>
+				</view>
+				<view  class="flex solid-bottom padding-lr align-center " open-type="getUserInfo" @getuserinfo="test"
+			 @tap="showModal" data-target="DialogModal1">
+					<view class=""><text class="lg cuIcon-shop"></text></view>
+					<view class="padding-sm" >去摆摊</view>
+				</view>
+			<!-- 	<view class="cu-item">
+					<text class="lg cuIcon-shop"></text>
+					<text class="text-black">去摆摊</text>
+				</view> -->
+			</view>
+			
 			<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test"
 			 @tap="showModal" data-target="DialogModal1">摆摊</button>
 			<!-- <button class="cu-btn block line-blue margin-tb-sm lg" disabled>无效状态</button> -->
@@ -23,13 +47,18 @@
 				</view>
 				<view class="padding-sm">
 					<form action="" class="form">
-						<view class="flex justify-between">
-							<view class="title">摊位名称</view>
-							<view class="text-right"><input  placeholder="摊位叫什么" name="input" v-model="name"></input></view>
+						<view class="flex justify-between border-bot">
+							<view class=" text-bold">摊位名称</view>
+							<view class="text-right"><input  placeholder="必填" name="input" v-model="name"></input></view>
 						</view>
-						<view class="flex justify-between">
+						<!-- <view class="flex justify-between">
 							<view class="title">摊位描述</view>
 							<view class="text-right"><input placeholder="卖什么的" name="input" v-model="description"></input></view>
+						</view> -->
+						<view class="margin-bottom text-left">
+							<view class="text-bold padding-tb">摊位描述 <tevt class="fr place">限最多80字</tevt></view>
+							<textarea  class="textarea" v-model="description" />
+							<!-- <view class="text-right margin-top-sm">{{fontNumber}}/200</view> -->
 						</view>
 						<!-- <view class="cu-form-group padding-left-xl">
 							<view class="title">摊位名称</view>
@@ -48,7 +77,7 @@
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
 						<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
-						<button class="cu-btn bg-green margin-left" @tap="submit">确定</button>
+						<button class="cu-btn bg-green margin-left" @tap="submit">出摊</button>
 
 					</view>
 				</view>
@@ -82,7 +111,7 @@
 						  borderRadius: "10",  
 						 bgColor: "#ffffff",  
 						 padding: "10",  
-						 display:"ALWAYS" 
+						 display:"BYCLICK" 
 						}
 						},
 						
@@ -233,10 +262,12 @@
 	} */
 	.buttons {
 		position: fixed;
-		width: 100%;
+		width: 98%;
 		height: auto;
 		bottom: 0;
-		text-align: center;
+		background: #fff;
+		left: 1%;
+		margin-bottom: 10rpx;
 	}
 
 	.dialog {
@@ -255,12 +286,13 @@
 		background-color: orange;
 	} */
 	.btns {
-		width: 150upx;
-		height: 150rpx;
+		width: 120upx;
+		height: 80rpx;
 		padding: 10upx;
 		color: #fff;
-		border-radius: 50%;
+		/* border-radius: 50%; */
 		margin-bottom: 40upx;
+		margin-left: 30upx;
 		background-color: #007fff;
 		box-shadow: 4px 4px 4px 0 rgba(61, 122, 255, .6);
 	}
@@ -285,13 +317,15 @@
 
 	.title {
 		font-size: 30rpx;
-		color: #666666;
+		/* color: #666666; */
 	}
 	.content{
 		height: auto;
 	}
 	.justify-between {
 		padding: 23upx 0;
+	}
+	.border-bot{
 		border-bottom: 1px solid #e2e5ec;
 	}
 	.form{
@@ -299,5 +333,33 @@
 		padding: 20rpx 30rpx 50rpx 30rpx;
 		background: #fff;
 		border-radius: 8rpx;
+	}
+	.place{
+		color: #808080;
+		font-weight: 400;
+	}
+	.textarea{
+		text-align: left;
+		border: 1px solid #e2e5ec;
+		border-radius: 10upx; 
+		width: 100%; 
+		padding: 20rpx;
+	}
+	.shop{
+		width: 33%;
+	}
+	.userImg{
+		width: 50upx;
+		height: 50upx;
+	}
+	.cuIcon-shop{
+		color: #007fff!important;
+		font-size: 40rpx;
+
+	}
+	.cu-item:after{
+		content: '';
+		-webkit-transform:scale(0)!important;
+		transform:scale(0)!important;
 	}
 </style>
