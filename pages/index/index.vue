@@ -21,16 +21,24 @@
 						<text class="cuIcon-close text-red"></text>
 					</view>
 				</view>
-				<view class="padding-xl">
-					<form action="">
-						<view class="cu-form-group">
+				<view class="padding-sm">
+					<form action="" class="form">
+						<view class="flex justify-between">
+							<view class="title">摊位名称</view>
+							<view class="text-right"><input  placeholder="摊位叫什么" name="input" v-model="name"></input></view>
+						</view>
+						<view class="flex justify-between">
+							<view class="title">摊位描述</view>
+							<view class="text-right"><input placeholder="卖什么的" name="input" v-model="description"></input></view>
+						</view>
+						<!-- <view class="cu-form-group padding-left-xl">
 							<view class="title">摊位名称</view>
 							<input placeholder="摊位叫什么" name="input" v-model="name"></input>
 						</view>
-						<view class="cu-form-group">
+						<view class="cu-form-group padding-left-xl">
 							<view class="title">摊位描述</view>
 							<input placeholder="卖什么的" name="input" v-model="description"></input>
-						</view>
+						</view> -->
 						<!-- <view class="cu-form-group">
 							<view class="title">摊位地址</view>
 							<input placeholder="请输入您的摊位地址" name="input" v-model=""></input>
@@ -276,7 +284,20 @@
 	}
 
 	.title {
-		font-size: 36rpx;
-		color: #8f8f94;
+		font-size: 30rpx;
+		color: #666666;
+	}
+	.content{
+		height: auto;
+	}
+	.justify-between {
+		padding: 23upx 0;
+		border-bottom: 1px solid #e2e5ec;
+	}
+	.form{
+		display: block;
+		padding: 20rpx 30rpx 50rpx 30rpx;
+		background: #fff;
+		border-radius: 8rpx;
 	}
 </style>
