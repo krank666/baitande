@@ -11,8 +11,8 @@
 		<view class="buttons shadow shadow-lg">
 			<view class="flex justify-between padding-top-sm">
 				<view class="flex solid-bottom padding-lr align-center user">
-					<view class=""><img src="../../static/logo.png" class="Img" alt=""></view>
-					<view class="padding-sm">张某某</view>
+					<view class=""><img :src="customerInfo.avatar?customerInfo.avatar:'../../static/head.png'" class="Img" alt=""></view>
+					<view class="padding-sm">{{customerInfo.customerName?customerInfo.customerName:'游客'}}</view>
 				</view>
 				<view class="flex solid-bottom padding-lr align-center ">
 					<button class="cu-btn btns" open-type="getUserInfo" v-if="!buttonFlag"
@@ -56,6 +56,24 @@
 				</view>
 			</view>
 		</view>
+		
+		
+		
+		<view class="cu-modal" :class="modalName=='activeStillMode'?'show':''">
+			<view class="cu-dialog dialog" style="width:85%;">
+				<view class="cu-bar">
+					<text>{{activeStill.name}}</text>
+					<text>{{activeStill.description}}</text>
+					<text>{{activeStill.addr}}</text>
+					
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn bg-green margin-left" @tap="clearActiveModel">确定</button>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -71,6 +89,8 @@
 	export default {
 		data() {
 			return {
+				customerInfo:{},
+				activeStill:{},
 				id: 0, // 使用 marker点击事件 需要填写id
 				title: 'map',
 				latitude: 0,
@@ -128,7 +148,10 @@
 								}
 								customer(data).then(ele => {
 									if (ele.code != 7) {
-										uni.setStorageSync('customer', ele.data)
+										if(!uni.getStorageSync('customer')){
+											uni.setStorageSync('customer', ele.data)
+										}
+										this.customerInfo = uni.getStorageSync('customer')
 									} else {
 										uni.showToast({
 											title: ele.msg,
@@ -158,12 +181,10 @@
 								obj.longitude = item.lng
 								obj.callout = {
 								id:item.ID,
-								content: item.township + "\n" + item.street + "\n" + item.number,
-								 width: 35,   
-								 height: 30,   
+								 content: item.township + "\n" + item.street + "\n" + item.number + "\n 查看详情  >",
 								 color: "#ff0000",  
 								 fontSize: "12",   
-								  borderRadius: "10",  
+								 borderRadius: "10",  
 								 bgColor: "#ffffff",  
 								 padding: "10",  
 								 display: 'BYCLICK'
@@ -198,6 +219,7 @@
 								key: 'customer'
 							});
 							uni.setStorageSync('customer', ele.data)
+							this.customerInfo = uni.getStorageSync('customer')
 						}
 					},
 					showModal(e) {
@@ -255,8 +277,16 @@
 							})
 						}
 					},
-					callouttap(e){
-						console.log(e)
+					async callouttap(e){
+						const res = await findStillById({id:e.markerId})
+						if(res.code == 0){
+							this.activeStill = res.data.still
+							this.modalName = "activeStillMode"
+						}
+					},
+					clearActiveModel(){
+						this.modalName = ''
+						this.activeStill = {}
 					}
 				}
 		}
