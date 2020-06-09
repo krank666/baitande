@@ -151,11 +151,13 @@
 						}
 						const res = await findStillByLatAndLng(datas)
 							const Arr = res.data
-							Arr && Arr.map(item => {
+							Arr && Arr.map((item,key) => {
 								const obj = {}
+								obj.id = item.ID
 								obj.latitude = item.lat
 								obj.longitude = item.lng
 								obj.callout = {
+								id:item.ID,
 								content: item.township + "\n" + item.street + "\n" + item.number,
 								 width: 35,   
 								 height: 30,   
