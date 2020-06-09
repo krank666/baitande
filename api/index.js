@@ -39,3 +39,25 @@ export const findStillByLatAndLng = (data)=>{
 		method:'POST'
 	})
 }
+
+/*
+* 收摊儿
+*/
+export const deleteStill  = (data)=>{
+	return myRequest({
+		url:'still/deleteStill ',
+		data,
+		method:'POST'
+	})
+}
+
+/*
+* 摊位状态及信息
+*/
+export const findStillById  = (data)=>{
+	return myRequest({
+		url:'still/findStillById ',
+		data,
+		method:'POST'
+	})
+}

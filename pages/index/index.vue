@@ -10,21 +10,30 @@
 		</view>
 		<view class="buttons shadow shadow-lg">
 			<view class="flex justify-between padding-top-sm">
-				<view  class="flex solid-bottom padding-lr align-center user">
-					<view class=""><img src="../../static/logo.png"  class="Img" alt="" ></view>
+				<view class="flex solid-bottom padding-lr align-center user">
+					<view class=""><img src="../../static/logo.png" class="Img" alt=""></view>
 					<view class="padding-sm">张某某</view>
 				</view>
-				<view  class="flex solid-bottom padding-lr align-center ">
-					<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test"
-					 @tap="showModal" data-target="DialogModal1"> <text class="lg cuIcon-shop"></text>摆摊</button>
+				<view class="flex solid-bottom padding-lr align-center ">
+					<button class="cu-btn btns" open-type="getUserInfo" v-if="!buttonFlag"
+					 @getuserinfo="test" @tap="showModal" data-target="DialogModal1"> <text class="lg cuIcon-shop"></text>出摊</button>
+					 <button class="cu-btn btns" v-if="buttonFlag" @tap="cancel"> <text class="lg cuIcon-shop"></text>收摊</button>
 				</view>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5a531b4c9f571d154df35efa9e8ee9ce4be0070b
 			</view>
 			<view class="flex justify-between padding-bottom-sm">
-				<view  class="flex solid-bottom padding-lr align-center user">
+				<view class="flex solid-bottom padding-lr align-center user">
 					<view class="Img"><text class="lg cuIcon-locationfill"></text></view>
 					<view class="padding-sm">当前所在朝阳区东大桥...</view>
 				</view>
 			</view>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5a531b4c9f571d154df35efa9e8ee9ce4be0070b
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
@@ -38,12 +47,13 @@
 					<form action="" class="form">
 						<view class="flex justify-between padding-tb-sm border-bot">
 							<view class=" text-bold"><text style="color: red;display: inline-block;vertical-align:middle;" class="margin-right-xs">*</text>摊位名称</view>
-							<view class="text-right " ><input  placeholder="必填" name="input" v-model="name"></input></view>
+							<view class="text-right "><input placeholder="必填" name="input" v-model="name" /></view>
 						</view>
 						<view class="margin-bottom text-left">
-							<view class="text-bold padding-tb padding-left-sm">摊位描述 <tevt class="fr place">限最多80字</tevt></view>
-							<textarea  class="textarea" v-model="description" />
-						</view>
+							<view class="text-bold padding-tb padding-left-sm">摊位描述 <tevt class="fr place">限最多80字</tevt>
+							</view>
+							<textarea class="textarea" v-model="description" />
+							</view>
 					</form>
 				</view>
 				<view class="cu-bar bg-white justify-end">
@@ -62,7 +72,9 @@
 		customer,
 		customerPUT,
 		createStill,
-		findStillByLatAndLng
+		findStillByLatAndLng,
+		findStillById,
+		deleteStill
 	} from '../../api/index.js'
 	export default {
 		data() {
@@ -71,29 +83,48 @@
 				title: 'map',
 				latitude: 0,
 				longitude: 0,
-				covers: [{
+				covers: [
+					{
 						latitude: 0,
 						longitude: 0,
-						callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
-						 width: 35,   
-						  height: 30,   
-						 color: "#ff0000",  
-						 fontSize: "16",   
-						  borderRadius: "10",  
-						 bgColor: "#ffffff",  
-						 padding: "10",  
-						 display:"BYCLICK" 
-						}
+							callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
+							 width: 35,   
+							  height: 30,   
+							 color: "#ff0000",  
+							 fontSize: "16",   
+							  borderRadius: "10",  
+							 bgColor: "#ffffff",  
+							 padding: "10",  
+							 display: 'BYCLICK'
+							}
 						},
-						
-						],
+					],
 					code: "",
 					modalName: null,
 					name: '',
-					description: ''
+					description: '',
+					buttonFlag:false
 				}
 			},
-			created() {
+			
+			async onShow() {
+				this.openType()
+				//获取用户位置
+				const this_ = this
+				uni.getLocation({
+					type: 'wgs84',
+					success: function(res) {
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						this_.longitude = res.longitude
+						this_.latitude = res.latitude
+						this_.covers[0].latitude = res.latitude
+						this_.covers[0].longitude = res.longitude
+						this_.refreshStillList()
+					}
+				});
+			},
+			onLoad() {
 					const this_ = this
 					uni.login({
 						provider: 'weixin',
@@ -117,35 +148,48 @@
 							}
 						}
 					})
-					//获取用户位置
-					uni.getLocation({
-						type: 'wgs84',
-						success: function(res) {
-							console.log('当前位置的经度：' + res.longitude);
-							console.log('当前位置的纬度：' + res.latitude);
-							this_.longitude = res.longitude
-							this_.latitude = res.latitude
-							this_.covers[0].latitude = res.latitude
-							this_.covers[0].longitude = res.longitude
-							const data = {
-								lng: res.longitude,
-								lat: res.latitude
-							}
-							findStillByLatAndLng(data).then(res => {
-								const Arr = res.data
-								Arr && Arr.map(item => {
-									const obj = {}
-									obj.latitude = item.lat
-									obj.longitude = item.lng
-									this_.covers.push(obj)
-								})
-							})
-							console.log(this_.covers)
-						}
-					});
+					
 
 				},
 				methods: {
+					async refreshStillList(){
+						const datas={
+							lng: this.longitude,
+							lat: this.latitude,
+						}
+						const res = await findStillByLatAndLng(datas)
+							const Arr = res.data
+							Arr && Arr.map(item => {
+								const obj = {}
+								obj.latitude = item.lat
+								obj.longitude = item.lng
+								obj.callout = {
+								content: item.township + "\n" + item.street + "\n" + item.number,
+								 width: 35,   
+								 height: 30,   
+								 color: "#ff0000",  
+								 fontSize: "12",   
+								  borderRadius: "10",  
+								 bgColor: "#ffffff",  
+								 padding: "10",  
+								 display: 'BYCLICK'
+								}
+								this.covers.push(obj)
+							})
+					},
+					async openType(){
+						const stillId = uni.getStorageSync('stillSuccess')
+						//打开小程序时 判断是否有摊位信息
+						if(stillId){
+							const res = await findStillById({id:stillId})
+							this.buttonFlag = res.data.open
+							if(!res.data.open){
+							uni.removeStorageSync("stillSuccess")
+						}	
+						}else{
+							console.log('摊位信息为空')
+						}
+					},
 					async test(e) {
 						if (e.detail.errMsg = "getUserInfo:ok") {
 							const data = {
@@ -182,34 +226,38 @@
 						if (ele.code == 0) {
 							this.hideModal()
 							this.covers = []
-							console.log(this.covers)
+							uni.setStorageSync('stillSuccess',ele.data.id)
 							const that = this
 							uni.showToast({
 								title: '出摊成功！',
 								duration: 2000,
 								icon: "none",
 								success() {
-									const datas = {
-										lng: that.longitude,
-										lat: that.latitude,
-									}
-									findStillByLatAndLng(datas).then(res => {
-										const Arr = res.data
-										Arr && Arr.map(item => {
-											const obj = {}
-											obj.latitude = item.lat
-											obj.longitude = item.lng
-											that.covers.push(obj)
-										})
-									})
+									that.openType()
+									that.refreshStillList()
 								}
 							})
-							console.log(this.covers)
 						} else {
 							uni.showToast({
 								title: ele.msg,
 								duration: 3000,
 								icon: "none",
+							})
+						}
+					},
+					async cancel(){
+						
+						const stillId = uni.getStorageSync('stillSuccess')
+						const res = await deleteStill({id:stillId})
+						if(res.code == 0){
+							uni.showToast({
+								title: '收摊成功！',
+								duration: 2000,
+								icon: "none",
+								success() {
+									this.openType()
+									this.refreshStillList()
+								}
 							})
 						}
 					}
@@ -218,6 +266,7 @@
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 	.content {
 		width: 100%;
 		height: 100vh;
@@ -311,5 +360,104 @@
 		font-size: 50rpx;
 		color: #007fff;
 	}
+=======
+.content {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+ }
+ .buttons {
+  position: fixed;
+  width: 98%;
+  height: auto;
+  bottom: 0;
+  background: #fff;
+  left: 1%;
+  margin-bottom: 10rpx;
+ }
 
+ .dialog {
+  height: auto;
+ }
+
+ .box {
+  width: 100%;
+ }
+ .btns {
+  min-width: 120upx;
+  height: 60rpx;
+  padding: 20upx;
+  color: #fff;
+  /* border-radius: 50%; */
+  /* margin-bottom: 40upx; */
+  margin-left: 30upx;
+  background-color: #007fff;
+  box-shadow: 4px 4px 4px 0 rgba(61, 122, 255, .6);
+ }
+
+ .activeBg {
+  background-color: #39b54a;
+ }
+
+ .logo {
+  height: 200rpx;
+  width: 200rpx;
+  margin-top: 200rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 50rpx;
+ }
+
+ .text-area {
+  display: flex;
+  justify-content: center;
+ }
+>>>>>>> 5a531b4c9f571d154df35efa9e8ee9ce4be0070b
+
+ .title {
+  font-size: 30rpx;
+ }
+ .content{
+  height: auto;
+ }
+ /* .justify-between {
+  padding: 23upx 0;
+ } */
+ 
+ .border-bot{
+  border-bottom: 1px solid #e2e5ec;
+ }
+ .form{
+  display: block;
+  padding: 30rpx;
+  background: #fff;
+  border-radius: 8rpx;
+ }
+ .place{
+  color: #808080;
+  font-weight: 400;
+ }
+ .textarea{
+  text-align: left;
+  border: 1px solid #e2e5ec;
+  border-radius: 10upx; 
+  width: 100%; 
+  padding: 20rpx;
+ }
+ .shop{
+  width: 33%;
+ }
+ .Img{
+  width: 50upx;
+  height: 50upx;
+ }
+ .cuIcon-shop{
+  color: #fff!important;
+  font-size: 30rpx;
+  margin-right: 10rpx;
+ }
+ .cuIcon-locationfill{
+  font-size: 50rpx;
+  color: #007fff;
+ }
 </style>
