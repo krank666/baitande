@@ -8,9 +8,10 @@
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "摆摊儿",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		// "navigationBarTextStyle": "black",
+		// "navigationBarTitleText": "摆摊儿",
+		// "navigationBarBackgroundColor": "#F8F8F8",
+		// "backgroundColor": "#F8F8F8",
+		"navigationStyle":"custom"
 	}
 }
