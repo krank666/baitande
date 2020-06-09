@@ -9,30 +9,6 @@
 			</view>
 		</view>
 		<view class="buttons">
-			<!-- <view  class="flex solid-bottom padding align-center user">
-				<view class=""><img src="../../static/logo.png"  class="userImg" alt="" ></view>
-				<view class="padding-sm">用户名</view>
-			</view> -->
-			<!-- <view class="shop">
-				<text class="lg text-gray cuIcon-shop"></text>
-				<view>摆摊</view>
-			</view> -->
-			<view class="flex justify-between">
-				<view  class="flex solid-bottom padding-lr align-center user">
-					<view class=""><img src="../../static/logo.png"  class="userImg" alt="" ></view>
-					<view class="padding-sm">用户名</view>
-				</view>
-				<view  class="flex solid-bottom padding-lr align-center " open-type="getUserInfo" @getuserinfo="test"
-			 @tap="showModal" data-target="DialogModal1">
-					<view class=""><text class="lg cuIcon-shop"></text></view>
-					<view class="padding-sm" >去摆摊</view>
-				</view>
-			<!-- 	<view class="cu-item">
-					<text class="lg cuIcon-shop"></text>
-					<text class="text-black">去摆摊</text>
-				</view> -->
-			</view>
-			
 			<button class="cu-btn btns" :class="modalName=='DialogModal1'? 'activeBg' :''" open-type="getUserInfo" @getuserinfo="test"
 			 @tap="showModal" data-target="DialogModal1">摆摊</button>
 			<!-- <button class="cu-btn block line-blue margin-tb-sm lg" disabled>无效状态</button> -->
@@ -47,37 +23,20 @@
 				</view>
 				<view class="padding-sm">
 					<form action="" class="form">
-						<view class="flex justify-between border-bot">
-							<view class=" text-bold">摊位名称</view>
-							<view class="text-right"><input  placeholder="必填" name="input" v-model="name"></input></view>
+						<view class="flex justify-between">
+							<view class="title">摊位名称</view>
+							<view class="text-right"><input  placeholder="摊位叫什么" name="input" v-model="name"></input></view>
 						</view>
-						<!-- <view class="flex justify-between">
+						<view class="flex justify-between">
 							<view class="title">摊位描述</view>
 							<view class="text-right"><input placeholder="卖什么的" name="input" v-model="description"></input></view>
-						</view> -->
-						<view class="margin-bottom text-left">
-							<view class="text-bold padding-tb">摊位描述 <tevt class="fr place">限最多80字</tevt></view>
-							<textarea  class="textarea" v-model="description" />
-							<!-- <view class="text-right margin-top-sm">{{fontNumber}}/200</view> -->
 						</view>
-						<!-- <view class="cu-form-group padding-left-xl">
-							<view class="title">摊位名称</view>
-							<input placeholder="摊位叫什么" name="input" v-model="name"></input>
-						</view>
-						<view class="cu-form-group padding-left-xl">
-							<view class="title">摊位描述</view>
-							<input placeholder="卖什么的" name="input" v-model="description"></input>
-						</view> -->
-						<!-- <view class="cu-form-group">
-							<view class="title">摊位地址</view>
-							<input placeholder="请输入您的摊位地址" name="input" v-model=""></input>
-						</view> -->
 					</form>
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
 						<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
-						<button class="cu-btn bg-green margin-left" @tap="submit">出摊</button>
+						<button class="cu-btn bg-green margin-left" @tap="submit">确定</button>
 
 					</view>
 				</view>
@@ -91,7 +50,8 @@
 		customer,
 		customerPUT,
 		createStill,
-		findStillByLatAndLng
+		findStillByLatAndLng,
+		findStillById
 	} from '../../api/index.js'
 	export default {
 		data() {
@@ -100,26 +60,39 @@
 				title: 'map',
 				latitude: 0,
 				longitude: 0,
-				covers: [{
+				covers: [
+					{
 						latitude: 0,
 						longitude: 0,
-						callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
-						 width: 35,   
-						  height: 30,   
-						 color: "#ff0000",  
-						 fontSize: "16",   
-						  borderRadius: "10",  
-						 bgColor: "#ffffff",  
-						 padding: "10",  
-						 display:"BYCLICK" 
-						}
+							callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
+							 width: 35,   
+							  height: 30,   
+							 color: "#ff0000",  
+							 fontSize: "16",   
+							  borderRadius: "10",  
+							 bgColor: "#ffffff",  
+							 padding: "10",  
+							 display: 'BYCLICK'
+							}
 						},
-						
-						],
+					],
 					code: "",
 					modalName: null,
 					name: '',
-					description: ''
+					description: '',
+					buttonFlag:false
+				}
+			},
+			async onShow() {
+				var this_ = this
+				const stillId = uni.getStorageSync('stillSuccess')
+				//打开小程序时 判断是否有摊位信息
+				if(stillId){
+					const res = await findStillById({id:stillId})
+					console.log(res)
+					this_.buttonFlag = res.data.open
+				}else{
+					console.log('摊位信息为空')
 				}
 			},
 			created() {
@@ -166,6 +139,17 @@
 									const obj = {}
 									obj.latitude = item.lat
 									obj.longitude = item.lng
+									obj.callout = {
+									content: item.township + "\n" + item.street + "\n" + item.number,
+									 width: 35,   
+									 height: 30,   
+									 color: "#ff0000",  
+									 fontSize: "12",   
+									  borderRadius: "10",  
+									 bgColor: "#ffffff",  
+									 padding: "10",  
+									 display: 'BYCLICK'
+									}
 									this_.covers.push(obj)
 								})
 							})
@@ -211,7 +195,7 @@
 						if (ele.code == 0) {
 							this.hideModal()
 							this.covers = []
-							console.log(this.covers)
+							uni.setStorageSync('stillSuccess',ele.data.id)
 							const that = this
 							uni.showToast({
 								title: '出摊成功！',
@@ -262,12 +246,10 @@
 	} */
 	.buttons {
 		position: fixed;
-		width: 98%;
+		width: 100%;
 		height: auto;
 		bottom: 0;
-		background: #fff;
-		left: 1%;
-		margin-bottom: 10rpx;
+		text-align: center;
 	}
 
 	.dialog {
@@ -286,13 +268,12 @@
 		background-color: orange;
 	} */
 	.btns {
-		width: 120upx;
-		height: 80rpx;
+		width: 150upx;
+		height: 150rpx;
 		padding: 10upx;
 		color: #fff;
-		/* border-radius: 50%; */
+		border-radius: 50%;
 		margin-bottom: 40upx;
-		margin-left: 30upx;
 		background-color: #007fff;
 		box-shadow: 4px 4px 4px 0 rgba(61, 122, 255, .6);
 	}
@@ -317,15 +298,13 @@
 
 	.title {
 		font-size: 30rpx;
-		/* color: #666666; */
+		color: #666666;
 	}
 	.content{
 		height: auto;
 	}
 	.justify-between {
 		padding: 23upx 0;
-	}
-	.border-bot{
 		border-bottom: 1px solid #e2e5ec;
 	}
 	.form{
@@ -333,33 +312,5 @@
 		padding: 20rpx 30rpx 50rpx 30rpx;
 		background: #fff;
 		border-radius: 8rpx;
-	}
-	.place{
-		color: #808080;
-		font-weight: 400;
-	}
-	.textarea{
-		text-align: left;
-		border: 1px solid #e2e5ec;
-		border-radius: 10upx; 
-		width: 100%; 
-		padding: 20rpx;
-	}
-	.shop{
-		width: 33%;
-	}
-	.userImg{
-		width: 50upx;
-		height: 50upx;
-	}
-	.cuIcon-shop{
-		color: #007fff!important;
-		font-size: 40rpx;
-
-	}
-	.cu-item:after{
-		content: '';
-		-webkit-transform:scale(0)!important;
-		transform:scale(0)!important;
 	}
 </style>
