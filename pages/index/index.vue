@@ -121,10 +121,10 @@
 						this_.longitude = res.longitude
 						this_.latitude = res.latitude
 						this_.covers[0].latitude = res.latitude
-						this_.covers[0].iconPath = this_.customerInfo.avatar||'../../static/head.png'
+						this_.covers[0].iconPath = '../../static/self.png'
 						this_.covers[0].longitude = res.longitude
-						this_.covers[0].width = 20
-						this_.covers[0].height = 20
+						this_.covers[0].width = 30
+						this_.covers[0].height = 30
 						this_.refreshStillList()
 					}
 				});
@@ -172,15 +172,18 @@
 								obj.id = item.ID
 								obj.latitude = item.lat
 								obj.longitude = item.lng
+								obj.iconPath = '../../static/still.png'
+								obj.width = 30
+								obj.height = 30
 								obj.callout = {
-								id:item.ID,
-								 content: item.township + "\n" + item.street + "\n" + item.number + "\n 查看详情  >",
-								 color: "#ff0000",  
-								 fontSize: "12",   
-								 borderRadius: "10",  
-								 bgColor: "#ffffff",  
-								 padding: "10",  
-								 display: 'BYCLICK'
+									id:item.ID,
+									content: item.township + "\n" + item.street + "\n" + item.number + "\n 查看详情  >",
+									color: "#ff0000",  
+									fontSize: "12",   
+									borderRadius: "10",
+									bgColor: "#ffffff",
+									padding: "10",  
+									display: 'BYCLICK'
 								}
 								this.covers.push(obj)
 							})
