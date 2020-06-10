@@ -23,14 +23,14 @@
 			<view class="flex justify-between padding-bottom-sm">
 				<view class="flex solid-bottom padding-lr align-center user">
 					<view class="Img"><text class="lg cuIcon-locationfill"></text></view>
-					<view class="padding-sm">当前所在朝阳区东大桥...</view>
+					<view class="padding-sm total">附近共有{{covers.length-1}}个摊位</view>
 				</view>
 			</view>
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
 				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
-					<view class="content">摊位信息</view>
+					<view class="content rightClass">摊位信息</view>
 					<view class="action" @tap="hideModal">
 						<text class="cuIcon-close text-red"></text>
 					</view>
@@ -42,7 +42,7 @@
 							<view class="text-right "><input placeholder="必填" name="input" v-model="name" /></view>
 						</view>
 						<view class="margin-bottom text-left">
-							<view class="text-bold padding-tb padding-left-sm">摊位描述 <tevt class="fr place">限最多80字</tevt>
+							<view class="text-bold padding-tb padding-left-sm">摊位描述 <text class="fr place">限最多80字</text>
 							</view>
 							<textarea class="textarea" v-model="description" />
 							</view>
@@ -61,11 +61,34 @@
 		
 		<view class="cu-modal" :class="modalName=='activeStillMode'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
-				<view class="cu-bar">
-					<text>{{activeStill.name}}</text>
-					<text>{{activeStill.description}}</text>
-					<text>{{activeStill.addr}}</text>
-					
+				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
+					<view class="content">摊位信息</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-sm cu-list menu-avatar comment solids-top">
+					<view class="cu-item">
+						<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);">
+							
+						</view>
+						<!-- <view class="padding-sm">{{customerInfo.customerName?customerInfo.customerName:'游客'}}</view> -->
+						<!-- <view class="flex solid-bottom padding-lr align-center user">
+							<view class=""><img :src="customerInfo.avatar?customerInfo.avatar:'../../static/head.png'" class="Img" alt=""></view>
+						</view> -->
+						<view class="content">
+							<view class="text-grey">摊位名称： {{activeStill.name}}</view>
+							<view class="text-gray" style="text-align: left;">
+								摊位描述： {{activeStill.description}}
+							</view>
+							<view class="bg-white radius margin-top-sm text-sm">
+								<view class="margin-bottom text-left">
+									摊位地址： {{activeStill.addr}}
+								</view>
+							</view>
+							
+						</view>
+					</view>
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
@@ -86,6 +109,7 @@
 		findStillById,
 		deleteStill
 	} from '../../api/index.js'
+	let that
 	export default {
 		data() {
 			return {
@@ -99,7 +123,7 @@
 					{
 						latitude: 0,
 						longitude: 0,
-					}
+					},
 					],
 					code: "",
 					modalName: null,
@@ -110,27 +134,27 @@
 			},
 			
 			async onShow() {
-				this.openType()
+				that = this
+				that.openType()
 				//获取用户位置
-				const this_ = this
 				uni.getLocation({
 					type: 'wgs84',
 					success: function(res) {
 						console.log('当前位置的经度：' + res.longitude);
 						console.log('当前位置的纬度：' + res.latitude);
-						this_.longitude = res.longitude
-						this_.latitude = res.latitude
-						this_.covers[0].latitude = res.latitude
-						this_.covers[0].iconPath = '../../static/self.png'
-						this_.covers[0].longitude = res.longitude
-						this_.covers[0].width = 30
-						this_.covers[0].height = 30
-						this_.refreshStillList()
+						that.longitude = res.longitude
+						that.latitude = res.latitude
+						that.covers[0].latitude = res.latitude
+						that.covers[0].iconPath = '../../static/self.png'
+						that.covers[0].longitude = res.longitude
+						that.covers[0].width = 30
+						that.covers[0].height = 30
+						that.refreshStillList()
 					}
 				});
 			},
 			onLoad() {
-					const this_ = this
+				that = this
 					uni.login({
 						provider: 'weixin',
 						success: function(loginRes) {
@@ -144,7 +168,7 @@
 										if(!uni.getStorageSync('customer')){
 											uni.setStorageSync('customer', ele.data)
 										}
-										this.customerInfo = uni.getStorageSync('customer')
+										that.customerInfo = uni.getStorageSync('customer')
 									} else {
 										uni.showToast({
 											title: ele.msg,
@@ -162,8 +186,8 @@
 				methods: {
 					async refreshStillList(){
 						const datas={
-							lng: this.longitude,
-							lat: this.latitude,
+							lng: that.longitude,
+							lat: that.latitude,
 						}
 						const res = await findStillByLatAndLng(datas)
 							const Arr = res.data
@@ -185,7 +209,7 @@
 									padding: "10",  
 									display: 'BYCLICK'
 								}
-								this.covers.push(obj)
+								that.covers.push(obj)
 							})
 					},
 					async openType(){
@@ -193,7 +217,7 @@
 						//打开小程序时 判断是否有摊位信息
 						if(stillId){
 							const res = await findStillById({id:stillId})
-							this.buttonFlag = res.data.open
+							that.buttonFlag = res.data.open
 							if(!res.data.open){
 							uni.removeStorageSync("stillSuccess")
 						}	
@@ -215,31 +239,30 @@
 								key: 'customer'
 							});
 							uni.setStorageSync('customer', ele.data)
-							this.customerInfo = uni.getStorageSync('customer')
+							that.customerInfo = uni.getStorageSync('customer')
 						}
 					},
 					showModal(e) {
-						this.modalName = e.currentTarget.dataset.target
+						that.modalName = e.currentTarget.dataset.target
 					},
 					hideModal(e) {
-						this.modalName = null
+						that.modalName = null
 					},
 					async submit() {
 						const data = {
 							exaCustomerId: uni.getStorageSync('customer').ID,
-							name: this.name,
-							description: this.description,
-							lng: this.longitude,
-							lat: this.latitude,
+							name: that.name,
+							description: that.description,
+							lng: that.longitude,
+							lat: that.latitude,
 							open: true
 						}
 						const ele = await createStill(data)
 
 						if (ele.code == 0) {
-							this.hideModal()
-							this.covers = []
+							that.hideModal()
+							that.covers = []
 							uni.setStorageSync('stillSuccess',ele.data.id)
-							const that = this
 							uni.showToast({
 								title: '出摊成功！',
 								duration: 2000,
@@ -267,8 +290,8 @@
 								duration: 2000,
 								icon: "none",
 								success() {
-									this.openType()
-									this.refreshStillList()
+									that.openType()
+									that.refreshStillList()
 								}
 							})
 						}
@@ -276,13 +299,13 @@
 					async callouttap(e){
 						const res = await findStillById({id:e.markerId})
 						if(res.code == 0){
-							this.activeStill = res.data.still
-							this.modalName = "activeStillMode"
+							that.activeStill = res.data.still
+							that.modalName = "activeStillMode"
 						}
 					},
 					clearActiveModel(){
-						this.modalName = ''
-						this.activeStill = {}
+						that.modalName = ''
+						that.activeStill = {}
 					}
 				}
 		}
@@ -327,6 +350,9 @@
 	.activeBg {
 		background-color: #39b54a;
 	}
+	.rightClass{
+		margin-right: -70rpx;
+	}
 	.logo {
 		height: 200rpx;
 		width: 200rpx;
@@ -339,7 +365,9 @@
 		display: flex;
 		justify-content: center;
 	}
-
+	.total{
+		color: grey;
+	}
 	.title {
 		font-size: 30rpx;
 	}
