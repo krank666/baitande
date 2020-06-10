@@ -99,17 +99,7 @@
 					{
 						latitude: 0,
 						longitude: 0,
-							callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
-							 width: 35,   
-							  height: 30,   
-							 color: "#ff0000",  
-							 fontSize: "16",   
-							  borderRadius: "10",  
-							 bgColor: "#ffffff",  
-							 padding: "10",  
-							 display: 'BYCLICK'
-							}
-						},
+					}
 					],
 					code: "",
 					modalName: null,
@@ -131,7 +121,10 @@
 						this_.longitude = res.longitude
 						this_.latitude = res.latitude
 						this_.covers[0].latitude = res.latitude
+						this_.covers[0].iconPath = this_.customerInfo.avatar||'../../static/head.png'
 						this_.covers[0].longitude = res.longitude
+						this_.covers[0].width = 20
+						this_.covers[0].height = 20
 						this_.refreshStillList()
 					}
 				});
