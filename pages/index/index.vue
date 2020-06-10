@@ -23,7 +23,7 @@
 			<view class="flex justify-between padding-bottom-sm">
 				<view class="flex solid-bottom padding-lr align-center user">
 					<view class="Img"><text class="lg cuIcon-locationfill"></text></view>
-					<view class="padding-sm">当前所在朝阳区东大桥...</view>
+					<view class="padding-sm total">附近共有{{covers.length-1}}个摊位</view>
 				</view>
 			</view>
 		</view>
@@ -42,7 +42,7 @@
 							<view class="text-right "><input placeholder="必填" name="input" v-model="name" /></view>
 						</view>
 						<view class="margin-bottom text-left">
-							<view class="text-bold padding-tb padding-left-sm">摊位描述 <tevt class="fr place">限最多80字</tevt>
+							<view class="text-bold padding-tb padding-left-sm">摊位描述 <text class="fr place">限最多80字</text>
 							</view>
 							<textarea class="textarea" v-model="description" />
 							</view>
@@ -69,30 +69,26 @@
 				</view>
 				<view class="padding-sm cu-list menu-avatar comment solids-top">
 					<view class="cu-item">
-						<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);"></view>
+						<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);">
+							
+						</view>
+						<!-- <view class="padding-sm">{{customerInfo.customerName?customerInfo.customerName:'游客'}}</view> -->
+						<!-- <view class="flex solid-bottom padding-lr align-center user">
+							<view class=""><img :src="customerInfo.avatar?customerInfo.avatar:'../../static/head.png'" class="Img" alt=""></view>
+						</view> -->
 						<view class="content">
-							<view class="text-grey">莫甘娜</view>
-							<view class="text-gray text-content text-df">
-								凯尔，你被自己的光芒变的盲目。
+							<view class="text-grey">摊位名称： {{activeStill.name}}</view>
+							<view class="text-gray" style="text-align: left;">
+								摊位描述： {{activeStill.description}}
 							</view>
-							<view class="bg-white padding-sm radius margin-top-sm  text-sm">
-								<view class="flex">
-									<view>凯尔：</view>
-									<view class="flex-sub">妹妹，你在帮他们给黑暗找借口吗?</view>
+							<view class="bg-white radius margin-top-sm text-sm">
+								<view class="margin-bottom text-left">
+									摊位地址： {{activeStill.addr}}
 								</view>
 							</view>
-							<view class="margin-top-sm flex justify-between">
-								<view class="text-gray text-df">2018年12月4日</view>
-								<view>
-									<text class="cuIcon-appreciatefill text-red"></text>
-									<text class="cuIcon-messagefill text-gray margin-left-sm"></text>
-								</view>
-							</view>
+							
 						</view>
 					</view>
-					<!-- <text>{{activeStill.name}}</text>
-					<text>{{activeStill.description}}</text>
-					<text>{{activeStill.addr}}</text> -->
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
@@ -127,16 +123,6 @@
 					{
 						latitude: 0,
 						longitude: 0,
-							callout: {content: "语言：珊珊是不是傻    \n    预计到达时间：10分钟    \n    车牌号:12345" ,
-							 width: 35,   
-							  height: 30,   
-							 color: "#ff0000",  
-							 fontSize: "16",   
-							  borderRadius: "10",  
-							 bgColor: "#ffffff",  
-							 padding: "10",  
-							 display: 'BYCLICK'
-							}
 						},
 					],
 					code: "",
@@ -156,7 +142,6 @@
 					success: function(res) {
 						console.log('当前位置的经度：' + res.longitude);
 						console.log('当前位置的纬度：' + res.latitude);
-						console.log('当前位置的纬度：' + res);
 						that.longitude = res.longitude
 						that.latitude = res.latitude
 						that.covers[0].latitude = res.latitude
@@ -374,7 +359,9 @@
 		display: flex;
 		justify-content: center;
 	}
-
+	.total{
+		color: grey;
+	}
 	.title {
 		font-size: 30rpx;
 	}
