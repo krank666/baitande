@@ -27,7 +27,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
+		<view class="cu-modal" v-if="modalName=='DialogModal1'" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
 				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
 					<view class="content rightClass">摊位信息</view>
@@ -59,7 +59,7 @@
 		
 		
 		
-		<view class="cu-modal" :class="modalName=='activeStillMode'?'show':''">
+		<view class="cu-modal" v-if="modalName=='activeStillMode'" :class="modalName=='activeStillMode'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
 				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
 					<view class="content">摊位信息</view>
@@ -69,7 +69,7 @@
 				</view>
 				<view class="padding-sm cu-list menu-avatar comment solids-top">
 					<view class="cu-item">
-						<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);">
+						<view class="cu-avatar round" :style="{backgroundImage:`url(${activeStill.exaCustomer.avatar})`}">
 							
 						</view>
 						<!-- <view class="padding-sm">{{customerInfo.customerName?customerInfo.customerName:'游客'}}</view> -->
