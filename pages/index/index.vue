@@ -30,7 +30,7 @@
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
 				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
-					<view class="content">摊位信息</view>
+					<view class="content rightClass">摊位信息</view>
 					<view class="action" @tap="hideModal">
 						<text class="cuIcon-close text-red"></text>
 					</view>
@@ -61,11 +61,38 @@
 		
 		<view class="cu-modal" :class="modalName=='activeStillMode'?'show':''">
 			<view class="cu-dialog dialog" style="width:85%;">
-				<view class="cu-bar">
-					<text>{{activeStill.name}}</text>
+				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
+					<view class="content">摊位信息</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-sm cu-list menu-avatar comment solids-top">
+					<view class="cu-item">
+						<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);"></view>
+						<view class="content">
+							<view class="text-grey">莫甘娜</view>
+							<view class="text-gray text-content text-df">
+								凯尔，你被自己的光芒变的盲目。
+							</view>
+							<view class="bg-white padding-sm radius margin-top-sm  text-sm">
+								<view class="flex">
+									<view>凯尔：</view>
+									<view class="flex-sub">妹妹，你在帮他们给黑暗找借口吗?</view>
+								</view>
+							</view>
+							<view class="margin-top-sm flex justify-between">
+								<view class="text-gray text-df">2018年12月4日</view>
+								<view>
+									<text class="cuIcon-appreciatefill text-red"></text>
+									<text class="cuIcon-messagefill text-gray margin-left-sm"></text>
+								</view>
+							</view>
+						</view>
+					</view>
+					<!-- <text>{{activeStill.name}}</text>
 					<text>{{activeStill.description}}</text>
-					<text>{{activeStill.addr}}</text>
-					
+					<text>{{activeStill.addr}}</text> -->
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
@@ -86,6 +113,7 @@
 		findStillById,
 		deleteStill
 	} from '../../api/index.js'
+	let that
 	export default {
 		data() {
 			return {
@@ -120,24 +148,25 @@
 			},
 			
 			async onShow() {
-				this.openType()
+				that = this
+				that.openType()
 				//获取用户位置
-				const this_ = this
 				uni.getLocation({
 					type: 'wgs84',
 					success: function(res) {
 						console.log('当前位置的经度：' + res.longitude);
 						console.log('当前位置的纬度：' + res.latitude);
-						this_.longitude = res.longitude
-						this_.latitude = res.latitude
-						this_.covers[0].latitude = res.latitude
-						this_.covers[0].longitude = res.longitude
-						this_.refreshStillList()
+						console.log('当前位置的纬度：' + res);
+						that.longitude = res.longitude
+						that.latitude = res.latitude
+						that.covers[0].latitude = res.latitude
+						that.covers[0].longitude = res.longitude
+						that.refreshStillList()
 					}
 				});
 			},
 			onLoad() {
-					const this_ = this
+				that = this
 					uni.login({
 						provider: 'weixin',
 						success: function(loginRes) {
@@ -151,7 +180,7 @@
 										if(!uni.getStorageSync('customer')){
 											uni.setStorageSync('customer', ele.data)
 										}
-										this.customerInfo = uni.getStorageSync('customer')
+										that.customerInfo = uni.getStorageSync('customer')
 									} else {
 										uni.showToast({
 											title: ele.msg,
@@ -169,8 +198,8 @@
 				methods: {
 					async refreshStillList(){
 						const datas={
-							lng: this.longitude,
-							lat: this.latitude,
+							lng: that.longitude,
+							lat: that.latitude,
 						}
 						const res = await findStillByLatAndLng(datas)
 							const Arr = res.data
@@ -189,7 +218,7 @@
 								 padding: "10",  
 								 display: 'BYCLICK'
 								}
-								this.covers.push(obj)
+								that.covers.push(obj)
 							})
 					},
 					async openType(){
@@ -197,7 +226,7 @@
 						//打开小程序时 判断是否有摊位信息
 						if(stillId){
 							const res = await findStillById({id:stillId})
-							this.buttonFlag = res.data.open
+							that.buttonFlag = res.data.open
 							if(!res.data.open){
 							uni.removeStorageSync("stillSuccess")
 						}	
@@ -219,31 +248,30 @@
 								key: 'customer'
 							});
 							uni.setStorageSync('customer', ele.data)
-							this.customerInfo = uni.getStorageSync('customer')
+							that.customerInfo = uni.getStorageSync('customer')
 						}
 					},
 					showModal(e) {
-						this.modalName = e.currentTarget.dataset.target
+						that.modalName = e.currentTarget.dataset.target
 					},
 					hideModal(e) {
-						this.modalName = null
+						that.modalName = null
 					},
 					async submit() {
 						const data = {
 							exaCustomerId: uni.getStorageSync('customer').ID,
-							name: this.name,
-							description: this.description,
-							lng: this.longitude,
-							lat: this.latitude,
+							name: that.name,
+							description: that.description,
+							lng: that.longitude,
+							lat: that.latitude,
 							open: true
 						}
 						const ele = await createStill(data)
 
 						if (ele.code == 0) {
-							this.hideModal()
-							this.covers = []
+							that.hideModal()
+							that.covers = []
 							uni.setStorageSync('stillSuccess',ele.data.id)
-							const that = this
 							uni.showToast({
 								title: '出摊成功！',
 								duration: 2000,
@@ -271,8 +299,8 @@
 								duration: 2000,
 								icon: "none",
 								success() {
-									this.openType()
-									this.refreshStillList()
+									that.openType()
+									that.refreshStillList()
 								}
 							})
 						}
@@ -280,13 +308,13 @@
 					async callouttap(e){
 						const res = await findStillById({id:e.markerId})
 						if(res.code == 0){
-							this.activeStill = res.data.still
-							this.modalName = "activeStillMode"
+							that.activeStill = res.data.still
+							that.modalName = "activeStillMode"
 						}
 					},
 					clearActiveModel(){
-						this.modalName = ''
-						this.activeStill = {}
+						that.modalName = ''
+						that.activeStill = {}
 					}
 				}
 		}
@@ -330,6 +358,9 @@
 	}
 	.activeBg {
 		background-color: #39b54a;
+	}
+	.rightClass{
+		margin-right: -70rpx;
 	}
 	.logo {
 		height: 200rpx;
