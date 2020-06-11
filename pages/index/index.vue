@@ -10,15 +10,14 @@
 		</view>
 		<view class="buttons shadow shadow-lg">
 			<view class="flex justify-between padding-top-sm">
-				<view class="flex solid-bottom padding-lr align-center user">
+				<view class="flex padding-lr align-center user">
 					<view class>
 						<img :src="customerInfo.avatar?customerInfo.avatar:'../../static/head.png'" alt class="Img" />
 					</view>
 					<view class="padding-sm">{{customerInfo.customerName?customerInfo.customerName:'游客'}}</view>
 				</view>
-				<view class="flex solid-bottom padding-lr align-center">
-					<button @getuserinfo="test" @tap="showModal" class="cu-btn btns" data-target="DialogModal1" open-type="getUserInfo"
-					 v-if="!buttonFlag">
+				<view class="flex padding-lr align-center">
+					<button @getuserinfo="getuserinfo" class="cu-btn btns" data-target="DialogModal1" open-type="getUserInfo" v-if="!buttonFlag">
 						<text class="lg cuIcon-shop"></text>出摊
 					</button>
 					<button @tap="cancel" class="cu-btn btns" v-if="buttonFlag">
@@ -27,7 +26,7 @@
 				</view>
 			</view>
 			<view class="flex justify-between padding-bottom-sm">
-				<view class="flex solid-bottom padding-lr align-center user">
+				<view class="flex padding-lr align-center user">
 					<view class="Img">
 						<text class="lg cuIcon-locationfill"></text>
 					</view>
@@ -35,7 +34,7 @@
 				</view>
 			</view>
 		</view>
-		<view :class="modalName=='DialogModal1'?'show':''" class="cu-modal">
+		<view v-if="modalName=='DialogModal1'" :class="modalName=='DialogModal1'?'show':''" class="cu-modal">
 			<view class="cu-dialog dialog" style="width:85%;">
 				<view class="cu-bar bg-white justify-end" style="height: 100rpx;">
 					<view class="content rightClass">摊位信息</view>
@@ -66,21 +65,20 @@
 								摊位描述
 								<text class="fr place">限最多80字</text>
 							</view>
-							<textarea class="textarea"  maxlength="80" v-model="createStill.description" />
-						</view>
-						<view class="tips text-left"><text class="cuIcon-notification"></text>出摊地点必须和当前定位一致</view>
+							<textarea class="textarea" maxlength="80" v-model="createStill.description" />
+							</view>
           </form>
         </view>
         <view class="cu-bar bg-white justify-end">
           <view class="action">
-            <button @tap="hideModal" class="cu-btn line-blue text-green">取消</button>
-            <button @tap="submit" class="cu-btn bg-blue margin-left">出摊</button>
+            <button @tap="hideModal" class="cu-btn line-green text-green">取消</button>
+            <button @tap="submit" class="cu-btn bg-green margin-left">出摊</button>
           </view>
         </view>
       </view>
     </view>
 
-    <view :class="modalName=='activeStillMode'?'show':''" class="cu-modal">
+    <view v-if="modalName=='activeStillMode'" :class="modalName=='activeStillMode'?'show':''" class="cu-modal">
       <view class="cu-dialog dialog" style="width:85%;">
         <view class="cu-bar bg-white justify-end" style="height: 100rpx;">
           <view class="content">摊位信息</view>
@@ -127,13 +125,10 @@ import {
   deleteStill
 } from '../../api/index.js'
 let that
-const x_PI = 3.14159265358979324 * 3000.0 / 180.0;
-const PI = 3.1415926535897932384626;
-const a = 6378245.0;
-const ee = 0.00669342162296594323;
 export default {
   data() {
     return {
+		btnLock:false,
       customerInfo: {},
       activeStill: {},
       id: 0, // 使用 marker点击事件 需要填写id
@@ -162,19 +157,8 @@ export default {
     that = this
     that.openType()
     //获取用户位置
-    uni.getLocation({
-      type: 'wgs84',
-      success: function(res) {
-        that.longitude = res.longitude
-        that.latitude = res.latitude
-        that.covers[0].latitude = res.latitude
-        that.covers[0].iconPath = '../../static/self.png'
-        that.covers[0].longitude = res.longitude
-        that.covers[0].width = 30
-        that.covers[0].height = 30
-        that.refreshStillList()
-      }
-    })
+	that.refreshStillList()
+    
   },
   onLoad() {
     that = this
@@ -188,7 +172,7 @@ export default {
           }
           customer(data).then(ele => {
             if (ele.code != 7) {
-              if (!uni.getStorageSync('customer')) {
+              if (!uni.getStorageSync('customer')||(uni.getStorageSync('customer')&&!uni.getStorageSync('customer').openid)) {
                 uni.setStorageSync('customer', ele.data)
               }
               that.customerInfo = uni.getStorageSync('customer')
@@ -206,7 +190,7 @@ export default {
 	
 	setInterval(()=>{
 		that.refreshStillList()
-	},5000)
+	},20000)
   },
   methods: {
     regionchange(e) {
@@ -223,51 +207,73 @@ export default {
       }
     },
     async refreshStillList() {
-		const datas = {
-			  lng: that.longitude,
-			  lat: that.latitude
-			}
-      const res = await findStillByLatAndLng(datas)
-      const coversArr = []
-      const Arr = res.data
-      Arr &&
-        Arr.map((item, key) => {
-          const obj = {}
-          obj.id = item.ID
-          obj.latitude = item.lat
-          obj.longitude = item.lng
-          obj.iconPath = '../../static/still.png'
-          obj.width = 30
-          obj.height = 30
-          obj.callout = {
-            id: item.ID,
-            textAlign: 'left',
-            content: "摊位："+item.name+"\n商品："+item.tag + '\n查看详情 >',
-            color: '#808080',
-            fontSize: '12',
-            borderRadius: '10',
-            bgColor: '#ffffff',
-            padding: '10',
-            display: 'BYCLICK'
-          }
-          coversArr.push(obj)
-        })
-      that.covers = [that.covers[0], ...coversArr]
+		uni.getLocation({
+		  type: 'gcj02',
+		  success: async function(lonres) {
+			  if(that.longitude==0&&that.latitude==0){
+				  that.longitude = lonres.longitude
+				  that.latitude = lonres.latitude
+			  }
+			  		const datas = {
+			  			  lng: that.longitude,
+			  			  lat: that.latitude
+			  			}
+			  const res = await findStillByLatAndLng(datas)
+			  const coversArr = []
+			  const Arr = res.data
+			  Arr &&
+			    Arr.map((item, key) => {
+			      const obj = {}
+			      obj.id = item.ID
+			      obj.latitude = item.lat
+			      obj.longitude = item.lng
+			      obj.iconPath = '../../static/still.png'
+			      obj.width = 30
+			      obj.height = 30
+			      obj.callout = {
+			        id: item.ID,
+			        textAlign: 'left',
+			        content: "摊位："+item.name+"\n\n商品："+item.tag + '\n\n    查看详情 >',
+			        color: '#808080',
+			        fontSize: '12',
+			        borderRadius: '10',
+			        bgColor: '#ffffff',
+			        padding: '10',
+			        display: 'BYCLICK'
+			      }
+			      coversArr.push(obj)
+			    })
+			  
+			  
+			  const cover = {}
+			cover.latitude = lonres.latitude
+			cover.iconPath = '../../static/self.png'
+		    cover.longitude = lonres.longitude
+		    cover.width = 25
+		    cover.height = 25
+			that.covers = [cover, ...coversArr]
+		  },
+		  fail: function(res){
+		  	that.covers = [that.covers[0], ...coversArr]
+		  }
+		})
     },
     async openType() {
       const stillId = uni.getStorageSync('stillSuccess')
       //打开小程序时 判断是否有摊位信息
       if (stillId) {
         const res = await findStillById({ id: stillId })
-        that.buttonFlag = res.data.open
-        if (!res.data.open) {
-          uni.removeStorageSync('stillSuccess')
-        }
+		if(res.code == 0){
+			 that.buttonFlag = res.data.open
+			if (!res.data.open) {
+			  uni.removeStorageSync('stillSuccess')
+			}
+		}
       } else {
         console.log('摊位信息为空')
       }
     },
-    async test(e) {
+    async getuserinfo(e) {
       if ((e.detail.errMsg = 'getUserInfo:ok')) {
         const data = {
           openid: uni.getStorageSync('customer').openid,
@@ -277,11 +283,15 @@ export default {
           signature: e.detail.signature
         }
         const ele = await customerPUT(data)
-        uni.removeStorage({
-          key: 'customer'
-        })
-        uni.setStorageSync('customer', ele.data)
-        that.customerInfo = uni.getStorageSync('customer')
+		if(ele.code == 0){
+			 uni.removeStorage({
+			  key: 'customer'
+			})
+			uni.setStorageSync('customer', ele.data)
+			that.customerInfo = uni.getStorageSync('customer')
+			that.showModal({currentTarget:{dataset:{target:'DialogModal1'}}})
+		}
+       
       }
     },
     showModal(e) {
@@ -291,10 +301,22 @@ export default {
       that.modalName = null
     },
     async submit() {
+		if(that.btnLock){
+			return false
+		}
+		
+		if(!that.createStill.name || !that.createStill.tag||!that.createStill.description){
+			uni.showToast({
+				icon:"none",
+				title:"请完整填写摊位信息"
+			})
+			return false
+		}
+		that.btnLock = true
 		let lng= 0
 		let lat = 0
 		uni.getLocation({
-		  type: 'wgs84',
+		  type: 'gcj02',
 		  success:async function(res) {
 		    lng = res.longitude
 		    lat = res.latitude
@@ -315,11 +337,12 @@ export default {
 			    title: '出摊成功！',
 			    duration: 2000,
 			    icon: 'none',
-			    success() {
-			      that.openType()
-			      that.refreshStillList()
-			    }
 			  })
+			  that.openType()
+			  that.refreshStillList()
+			  that.createStill.name = ""
+			  that.createStill.tag = "" 
+			  that.createStill.description = ""
 			} else {
 			  uni.showToast({
 			    title: ele.msg,
@@ -327,11 +350,16 @@ export default {
 			    icon: 'none'
 			  })
 			}
+			that.btnLock = false
 		  }
 		})
       
     },
     async cancel() {
+		if(that.btnLock){
+			return false
+		}
+		that.btnLock = true
       const stillId = uni.getStorageSync('stillSuccess')
       const res = await deleteStill({ id: stillId })
       if (res.code == 0) {
@@ -339,11 +367,10 @@ export default {
           title: '收摊成功！',
           duration: 2000,
           icon: 'none',
-          success() {
-            that.openType()
-            that.refreshStillList()
-          }
         })
+		that.openType()
+		that.refreshStillList()
+		that.btnLock = false
       }
     },
     async callouttap(e) {
@@ -394,7 +421,7 @@ export default {
   color: #fff;
   /* border-radius: 50%; */
   margin-left: 30rpx;
-  background-color: #0081ff;
+  background-color: #007fff;
   box-shadow: 3px 3px 2px 0 rgba(61, 122, 255, 0.4);
 }
 .activeBg {
@@ -458,7 +485,7 @@ export default {
 }
 .cuIcon-locationfill {
   font-size: 50rpx;
-  color: #0081ff;
+  color: #007fff;
 }
 
 .title {
@@ -505,17 +532,6 @@ export default {
 }
 .cuIcon-locationfill {
   font-size: 50rpx;
-  color: #0081ff;
-}
-.cuIcon-notification{
-	font-size: 30rpx;
-	color: #000;
-	margin-right: 10rpx;
-	vertical-align: middle;
-}
-.tips{
-	color: #d81e06;
-	/* font-weight: 700; */
-	font-size: 22rpx;
+  color: #007fff;
 }
 </style>
