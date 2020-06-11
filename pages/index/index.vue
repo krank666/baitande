@@ -67,13 +67,14 @@
 								<text class="fr place">限最多80字</text>
 							</view>
 							<textarea class="textarea"  maxlength="80" v-model="createStill.description" />
-							</view>
+						</view>
+						<view class="tips text-left"><text class="cuIcon-notification"></text>出摊地点必须和当前定位一致</view>
           </form>
         </view>
         <view class="cu-bar bg-white justify-end">
           <view class="action">
-            <button @tap="hideModal" class="cu-btn line-green text-green">取消</button>
-            <button @tap="submit" class="cu-btn bg-green margin-left">出摊</button>
+            <button @tap="hideModal" class="cu-btn line-blue text-green">取消</button>
+            <button @tap="submit" class="cu-btn bg-blue margin-left">出摊</button>
           </view>
         </view>
       </view>
@@ -393,7 +394,7 @@ export default {
   color: #fff;
   /* border-radius: 50%; */
   margin-left: 30rpx;
-  background-color: #007fff;
+  background-color: #0081ff;
   box-shadow: 3px 3px 2px 0 rgba(61, 122, 255, 0.4);
 }
 .activeBg {
@@ -457,7 +458,7 @@ export default {
 }
 .cuIcon-locationfill {
   font-size: 50rpx;
-  color: #007fff;
+  color: #0081ff;
 }
 
 .title {
@@ -504,6 +505,17 @@ export default {
 }
 .cuIcon-locationfill {
   font-size: 50rpx;
-  color: #007fff;
+  color: #0081ff;
+}
+.cuIcon-notification{
+	font-size: 30rpx;
+	color: #000;
+	margin-right: 10rpx;
+	vertical-align: middle;
+}
+.tips{
+	color: #d81e06;
+	/* font-weight: 700; */
+	font-size: 22rpx;
 }
 </style>
