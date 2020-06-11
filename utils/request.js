@@ -41,6 +41,7 @@ const myRequest = ({
                 'accessToken': userInfo.token
             }
         }).then(res => {
+           
             if (res[0]) {
                 resolve(res[0]) //错误信息
             } else {
