@@ -6,16 +6,6 @@ const myRequest = ({
     proxy = 'api',
     commonInfo = {}
 }) => {
-    let lock = true
-    setTimeout(() => {
-        if (lock) {
-            uni.showLoading({
-                title: 'loading...',
-                mask: true
-            });
-        }
-    }, 200)
-
     // 返回请求的结果 通过Promise返回 支持 then catch
     return new Promise((resolve, reject) => {
         let BASEURL
@@ -24,8 +14,6 @@ const myRequest = ({
                 BASEURL = 'https://tantu.henrongyi.top/v1/'
                 break;
             case 'admin':
-                // BASEURL = 'https://www.staroftomorrow.cn/api'
-				BASEURL = 'http://10.188.68.59:8099'
                 // BASEURL = 'https://www.staroftomorrow.cn/api'
                     BASEURL = 'http://10.188.68.59:8099'
                 break;
@@ -50,8 +38,7 @@ const myRequest = ({
                 'accessToken': userInfo.token
             }
         }).then(res => {
-            lock = false
-            uni.hideLoading()
+           
             if (res[0]) {
                 resolve(res[0]) //错误信息
             } else {
@@ -62,8 +49,7 @@ const myRequest = ({
                 }
             }
         }).catch(err => {
-            lock = false
-            uni.hideLoading()
+          
         })
     })
 }

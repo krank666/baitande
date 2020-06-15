@@ -45,7 +45,7 @@ export const findStillByLatAndLng = (data)=>{
 */
 export const deleteStill  = (data)=>{
 	return myRequest({
-		url:'still/deleteStill ',
+		url:'still/deleteStill',
 		data,
 		method:'POST'
 	})
@@ -56,7 +56,7 @@ export const deleteStill  = (data)=>{
 */
 export const findStillById  = (data)=>{
 	return myRequest({
-		url:'still/findStillById ',
+		url:'still/findStillById',
 		data,
 		method:'POST'
 	})
