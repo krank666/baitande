@@ -113,6 +113,7 @@
 				<view class="content">
 				  <view class="text-grey">摊位名称： {{activeStill.name}}</view>
 				  <view class="text-gray" style="text-align: left;">摊位详情： {{activeStill.description}}</view>
+				  <view class="text-gray" style="text-align: left;">出摊时间： {{activeStill.start}} - {{activeStill.end}}</view>
 				  <view class="bg-white radius margin-top-sm text-sm">
 					<view class="margin-bottom text-left">摊位地址： {{activeStill.addr}}</view>
 				  </view>
